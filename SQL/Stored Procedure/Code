@@ -1,0 +1,314 @@
+CREATE TABLE Dept_Master
+(
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(100)
+);
+
+CREATE TABLE Emp_Master
+(
+    EmployeeID INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DepartmentID INT,
+    Salary DECIMAL(10,2),
+    JoinDate DATE,
+    FOREIGN KEY (DepartmentID) REFERENCES Dept_Master(DepartmentID)
+);
+INSERT INTO Dept_Master (DepartmentID, DepartmentName)
+VALUES
+(1, 'HR'),
+(2, 'Finance'),
+(3, 'IT'),
+(4, 'Marketing');
+INSERT INTO Emp_Master
+(FirstName, LastName, DepartmentID, Salary, JoinDate)
+VALUES
+('John', 'Doe', 1, 5000.00, '2020-01-15'),
+('Jane', 'Smith', 2, 6000.00, '2019-03-22'),
+('Michael', 'Johnson', 3, 7000.00, '2018-07-30'),
+('Emily', 'Davis', 4, 5500.00, '2021-11-05');
+GO
+
+CREATE PROCEDURE sp_GetEmployeesByDepartment
+    @DepartmentID INT
+AS
+BEGIN
+    SELECT
+        EmployeeID,
+        FirstName,
+        LastName,
+        DepartmentID,
+        Salary,
+        JoinDate
+    FROM Emp_Master
+    WHERE DepartmentID = @DepartmentID;
+END;
+
+GO
+EXEC sp_GetEmployeesByDepartment @DepartmentID = 3;
+CREATE PROCEDURE sp_InsertEmployee
+    @FirstName VARCHAR(50),
+    @LastName VARCHAR(50),
+    @DepartmentID INT,
+    @Salary DECIMAL(10,2),
+    @JoinDate DATE
+AS
+BEGIN
+    INSERT INTO Emp_Master
+    (
+        FirstName,
+        LastName,
+        DepartmentID,
+        Salary,
+        JoinDate
+    )
+    VALUES
+    (
+        @FirstName,
+        @LastName,
+        @DepartmentID,
+        @Salary,
+        @JoinDate
+    );
+END;
+GO
+EXEC sp_InsertEmployee
+    @FirstName = 'Robert',
+    @LastName = 'Brown',
+    @DepartmentID = 3,
+    @Salary = 8000.00,
+    @JoinDate = '2024-05-10';
+	SELECT * FROM Emp_Master;
+	SELECT name
+FROM sys.procedures
+WHERE name IN ('sp_GetEmployeesByDepartment', 'sp_InsertEmployee');
+-- Exe-2 Modify a Stored Procedure
+ALTER PROCEDURE sp_GetEmployeesByDepartment
+    @DepartmentID INT
+AS
+BEGIN
+    SELECT
+        EmployeeID,
+        FirstName,
+        LastName,
+        DepartmentID,
+        Salary,
+        JoinDate
+    FROM Emp_Master
+    WHERE DepartmentID = @DepartmentID;
+END;
+GO
+
+-- Execute the Modified Procedure
+EXEC sp_GetEmployeesByDepartment @DepartmentID = 3;
+GO
+-- exe3- Delete a Stored Procedure
+DROP PROCEDURE sp_GetEmployeesByDepartment;
+GO
+
+SELECT *
+FROM sys.procedures
+WHERE name = 'sp_GetEmployeesByDepartment';
+
+DROP PROCEDURE sp_GetEmployeesByDepartment;
+GO
+
+DROP PROCEDURE sp_InsertEmployee;
+GO
+SELECT name
+FROM sys.procedures;
+-- Exe-4: Execute a Stored Procedure
+-- Goal: Retrieve employee details for a specific department
+
+EXEC sp_GetEmployeesByDepartment @DepartmentID = 2;
+GO
+
+-- View result again (optional verification)
+SELECT *
+FROM Emp_Master
+WHERE DepartmentID = 2;
+GO
+-- Exe-5: Return Data from a Stored Procedure
+-- Goal: Get total number of employees in a department
+
+CREATE PROCEDURE sp_GetEmployeeCountByDepartment
+    @DepartmentID INT
+AS
+BEGIN
+    SELECT COUNT(*) AS TotalEmployees
+    FROM Emp_Master
+    WHERE DepartmentID = @DepartmentID;
+END;
+GO
+
+-- Execute the stored procedure
+EXEC sp_GetEmployeeCountByDepartment @DepartmentID = 3;
+GO
+
+-- Exe-6: Use Output Parameter in Stored Procedure
+-- Goal: Get total salary of employees in a department using OUTPUT parameter
+
+CREATE PROCEDURE sp_GetTotalSalaryByDepartment
+    @DepartmentID INT,
+    @TotalSalary DECIMAL(10,2) OUTPUT
+AS
+BEGIN
+    SELECT @TotalSalary = SUM(Salary)
+    FROM Emp_Master
+    WHERE DepartmentID = @DepartmentID;
+END;
+GO
+
+DECLARE @SalarySum DECIMAL(10,2);
+EXEC sp_GetTotalSalaryByDepartment
+    @DepartmentID = 3,
+    @TotalSalary = @SalarySum OUTPUT;
+
+
+SELECT @SalarySum AS TotalSalary;
+GO
+-- Exe-7: Stored Procedure with Multiple Parameters
+-- Goal: Update employee salary
+
+CREATE PROCEDURE sp_UpdateEmployeeSalary
+    @EmployeeID INT,
+    @NewSalary DECIMAL(10,2)
+AS
+BEGIN
+    UPDATE Emp_Master
+    SET Salary = @NewSalary
+    WHERE EmployeeID = @EmployeeID;
+END;
+GO
+
+EXEC sp_UpdateEmployeeSalary 1, 5500.00;
+GO
+
+SELECT *
+FROM Emp_Master
+WHERE EmployeeID = 1;
+GO
+-- Exe-8: Stored Procedure with Conditional Logic
+-- Goal: Give bonus to employees based on Department
+
+CREATE PROCEDURE sp_GiveBonus
+    @DepartmentID INT,
+    @BonusAmount DECIMAL(10,2)
+AS
+BEGIN
+    UPDATE Emp_Master
+    SET Salary = Salary + @BonusAmount
+    WHERE DepartmentID = @DepartmentID;
+END;
+GO
+
+EXEC sp_GiveBonus 1, 500.00;
+GO
+
+SELECT *
+FROM Emp_Master
+WHERE DepartmentID = 1;
+GO
+
+-- Exe-9: Stored Procedure with Transactions
+-- Goal: Update employee salary with transaction safety
+
+CREATE PROCEDURE sp_UpdateSalaryWithTransaction
+    @EmployeeID INT,
+    @NewSalary DECIMAL(10,2)
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        
+        UPDATE Emp_Master
+        SET Salary = @NewSalary
+        WHERE EmployeeID = @EmployeeID;
+
+        COMMIT TRANSACTION;
+    END TRY
+
+    BEGIN CATCH
+       
+        ROLLBACK TRANSACTION;
+
+        PRINT 'Error occurred. Transaction rolled back.';
+    END CATCH
+END;
+GO
+
+EXEC sp_UpdateSalaryWithTransaction 2, 6500.00;
+GO
+
+SELECT *
+FROM Emp_Master
+WHERE EmployeeID = 2;
+GO
+
+-- Exe-10: Stored Procedure using Dynamic SQL
+-- Goal: Retrieve employee details using flexible filters
+
+CREATE PROCEDURE sp_GetEmployeesDynamic
+    @FilterColumn NVARCHAR(50),
+    @FilterValue NVARCHAR(100)
+AS
+BEGIN
+    DECLARE @SQL NVARCHAR(MAX);
+
+    SET @SQL = '
+        SELECT EmployeeID, FirstName, LastName, DepartmentID, Salary, JoinDate
+        FROM Emp_Master
+        WHERE ' + QUOTENAME(@FilterColumn) + ' = @Value';
+
+    EXEC sp_executesql
+        @SQL,
+        N'@Value NVARCHAR(100)',
+        @Value = @FilterValue;
+END;
+GO
+
+
+EXEC sp_GetEmployeesDynamic 'DepartmentID', '3';
+GO
+
+EXEC sp_GetEmployeesDynamic 'FirstName', 'John';
+GO
+
+-- Exe-11: Error Handling in Stored Procedure
+-- Goal: Update salary with TRY...CATCH and custom error message
+
+CREATE PROCEDURE sp_UpdateSalaryWithErrorHandling
+    @EmployeeID INT,
+    @NewSalary DECIMAL(10,2)
+AS
+BEGIN
+    BEGIN TRY
+        
+        IF NOT EXISTS (SELECT 1 FROM Emp_Master WHERE EmployeeID = @EmployeeID)
+        BEGIN
+            THROW 50001, 'Employee ID does not exist.', 1;
+        END
+
+    
+        UPDATE Emp_Master
+        SET Salary = @NewSalary
+        WHERE EmployeeID = @EmployeeID;
+
+        PRINT 'Salary updated successfully.';
+    END TRY
+
+    BEGIN CATCH
+        
+        SELECT 
+            ERROR_NUMBER() AS ErrorNumber,
+            ERROR_MESSAGE() AS ErrorMessage;
+    END CATCH
+END;
+GO
+
+EXEC sp_UpdateSalaryWithErrorHandling 3, 9000.00;
+GO
+
+EXEC sp_UpdateSalaryWithErrorHandling 999, 5000.00;
+GO
