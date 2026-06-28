@@ -1,0 +1,58 @@
+using System;
+
+class Employee
+{
+    public int Id;
+    public string Name;
+    public string Position;
+    public double Salary;
+
+    public Employee(int id, string name, string pos, double sal)
+    {
+        Id = id;
+        Name = name;
+        Position = pos;
+        Salary = sal;
+    }
+}
+
+class EmployeeSystem
+{
+    Employee[] arr = new Employee[100];
+    int count = 0;
+
+    public void Add(Employee e)
+    {
+        arr[count++] = e;
+    }
+
+    public void Search(int id)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (arr[i].Id == id)
+                Console.WriteLine(arr[i].Name);
+        }
+    }
+
+    public void Traverse()
+    {
+        for (int i = 0; i < count; i++)
+            Console.WriteLine(arr[i].Name);
+    }
+
+    public void Delete(int id)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (arr[i].Id == id)
+            {
+                for (int j = i; j < count - 1; j++)
+                    arr[j] = arr[j + 1];
+
+                count--;
+                break;
+            }
+        }
+    }
+}

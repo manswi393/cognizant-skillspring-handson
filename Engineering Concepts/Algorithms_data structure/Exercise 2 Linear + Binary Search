@@ -1,0 +1,48 @@
+using System;
+
+class Product
+{
+    public int ProductId;
+    public string ProductName;
+    public string Category;
+
+    public Product(int id, string name, string cat)
+    {
+        ProductId = id;
+        ProductName = name;
+        Category = cat;
+    }
+}
+
+class SearchDemo
+{
+    // Linear Search
+    public static int LinearSearch(Product[] arr, string name)
+    {
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i].ProductName == name)
+                return i;
+        }
+        return -1;
+    }
+
+    // Binary Search (sorted by name)
+    public static int BinarySearch(Product[] arr, string name)
+    {
+        int low = 0, high = arr.Length - 1;
+
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+
+            int cmp = string.Compare(arr[mid].ProductName, name);
+
+            if (cmp == 0) return mid;
+            else if (cmp < 0) low = mid + 1;
+            else high = mid - 1;
+        }
+
+        return -1;
+    }
+}

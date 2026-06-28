@@ -1,0 +1,69 @@
+using System;
+
+class Order
+{
+    public int OrderId;
+    public string CustomerName;
+    public double TotalPrice;
+
+    public Order(int id, string name, double price)
+    {
+        OrderId = id;
+        CustomerName = name;
+        TotalPrice = price;
+    }
+}
+
+class SortOrders
+{
+    // Bubble Sort
+    public static void BubbleSort(Order[] arr)
+    {
+        for (int i = 0; i < arr.Length - 1; i++)
+        {
+            for (int j = 0; j < arr.Length - i - 1; j++)
+            {
+                if (arr[j].TotalPrice > arr[j + 1].TotalPrice)
+                {
+                    var temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // Quick Sort
+    public static void QuickSort(Order[] arr, int low, int high)
+    {
+        if (low < high)
+        {
+            int pi = Partition(arr, low, high);
+            QuickSort(arr, low, pi - 1);
+            QuickSort(arr, pi + 1, high);
+        }
+    }
+
+    private static int Partition(Order[] arr, int low, int high)
+    {
+        double pivot = arr[high].TotalPrice;
+        int i = low - 1;
+
+        for (int j = low; j < high; j++)
+        {
+            if (arr[j].TotalPrice < pivot)
+            {
+                i++;
+                var temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        var t = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = t;
+
+        return i + 1;
+    }
+}

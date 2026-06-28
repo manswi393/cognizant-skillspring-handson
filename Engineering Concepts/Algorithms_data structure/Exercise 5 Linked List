@@ -1,0 +1,66 @@
+using System;
+
+class Task
+{
+    public int Id;
+    public string Name;
+    public string Status;
+    public Task Next;
+
+    public Task(int id, string name, string status)
+    {
+        Id = id;
+        Name = name;
+        Status = status;
+        Next = null;
+    }
+}
+
+class TaskList
+{
+    Task head;
+
+    public void Add(Task t)
+    {
+        if (head == null)
+            head = t;
+        else
+        {
+            Task temp = head;
+            while (temp.Next != null)
+                temp = temp.Next;
+
+            temp.Next = t;
+        }
+    }
+
+    public void Traverse()
+    {
+        Task temp = head;
+        while (temp != null)
+        {
+            Console.WriteLine(temp.Name);
+            temp = temp.Next;
+        }
+    }
+
+    public void Delete(int id)
+    {
+        if (head != null && head.Id == id)
+        {
+            head = head.Next;
+            return;
+        }
+
+        Task temp = head;
+        while (temp != null && temp.Next != null)
+        {
+            if (temp.Next.Id == id)
+            {
+                temp.Next = temp.Next.Next;
+                return;
+            }
+            temp = temp.Next;
+        }
+    }
+}
