@@ -1,0 +1,40 @@
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(100)
+);
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DepartmentID INT,
+    Salary DECIMAL(10, 2),
+    JoinDate DATE,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
+SELECT * FROM Departments;
+SELECT * FROM Employees;
+INSERT INTO Departments (DepartmentID, DepartmentName)
+VALUES 
+(1, 'IT'),
+(2, 'HR'),
+(3, 'Finance');
+INSERT INTO Employees (EmployeeID, FirstName, LastName, DepartmentID, Salary, JoinDate)
+VALUES
+(101, 'Amit', 'Sharma', 1, 50000, '2023-01-10'),
+(102, 'Priya', 'Patil', 2, 45000, '2022-07-15'),
+(103, 'Rahul', 'Deshmukh', 1, 60000, '2021-03-20'),
+(104, 'Sneha', 'Kulkarni', 3, 55000, '2020-11-05');
+SELECT * FROM Departments;
+SELECT * FROM Employees;
+GO
+CREATE VIEW vw_EmployeeBasicInfo AS
+SELECT 
+    e.EmployeeID,
+    e.FirstName,
+    e.LastName,
+    d.DepartmentName
+FROM Employees e
+INNER JOIN Departments d
+    ON e.DepartmentID = d.DepartmentID;
+GO
+SELECT * FROM vw_EmployeeBasicInfo;
