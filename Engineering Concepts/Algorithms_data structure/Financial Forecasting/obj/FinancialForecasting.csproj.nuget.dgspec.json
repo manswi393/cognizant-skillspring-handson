@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\InventoryManagementSystem\\InventoryManagementSystem.csproj": {}
+    "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\Financial Forecasting\\FinancialForecasting.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\InventoryManagementSystem\\InventoryManagementSystem.csproj": {
+    "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\Financial Forecasting\\FinancialForecasting.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\InventoryManagementSystem\\InventoryManagementSystem.csproj",
-        "projectName": "InventoryManagementSystem",
-        "projectPath": "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\InventoryManagementSystem\\InventoryManagementSystem.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\Financial Forecasting\\FinancialForecasting.csproj",
+        "projectName": "FinancialForecasting",
+        "projectPath": "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\Financial Forecasting\\FinancialForecasting.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\InventoryManagementSystem\\obj\\",
+        "outputPath": "C:\\Users\\HP\\cognizant-skillspring-handson\\Engineering Concepts\\Algorithms_data structure\\Financial Forecasting\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"

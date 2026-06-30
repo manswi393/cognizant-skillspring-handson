@@ -6,15 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "InventoryManagementSystem/1.0.0": {
+      "FinancialForecasting/1.0.0": {
         "runtime": {
-          "InventoryManagementSystem.dll": {}
+          "FinancialForecasting.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "InventoryManagementSystem/1.0.0": {
+    "FinancialForecasting/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
