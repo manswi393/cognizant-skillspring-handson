@@ -1,70 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
-using EmployeeAPI.Models;
+using EmployeeApi.Models;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace EmployeeAPI.Controllers
+namespace EmployeeApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
     {
-        // Hardcoded Employee List
-        private static List<Employee> employees = new List<Employee>()
+        private static List<Employee> employees = new List<Employee>
         {
-            new Employee
-            {
-                Id = 1,
-                Name = "Rahul",
-                Department = "IT",
-                Salary = 50000
-            },
-            new Employee
-            {
-                Id = 2,
-                Name = "Priya",
-                Department = "HR",
-                Salary = 45000
-            },
-            new Employee
-            {
-                Id = 3,
-                Name = "Amit",
-                Department = "Finance",
-                Salary = 60000
-            }
+            new Employee { Id = 1, Name = "Amit", Department = "IT" },
+            new Employee { Id = 2, Name = "Neha", Department = "HR" },
+            new Employee { Id = 3, Name = "Raj", Department = "Finance" }
         };
 
-        // GET All Employees
-        [HttpGet]
-        public ActionResult<List<Employee>> GetEmployees()
+        [HttpPut]
+        public ActionResult<Employee> UpdateEmployee([FromBody] Employee input)
         {
-            return Ok(employees);
-        }
-
-        // UPDATE Employee
-        [HttpPut("{id}")]
-        public ActionResult<Employee> UpdateEmployee(int id, [FromBody] Employee employee)
-        {
-            // Check Invalid Id
-            if (id <= 0)
-            {
+            if (input.Id <= 0)
                 return BadRequest("Invalid employee id");
-            }
 
-            // Find Employee
-            Employee emp = employees.FirstOrDefault(e => e.Id == id);
+            var emp = employees.FirstOrDefault(e => e.Id == input.Id);
 
-            // Employee Not Found
             if (emp == null)
-            {
                 return BadRequest("Invalid employee id");
-            }
 
-            // Update Employee
-            emp.Name = employee.Name;
-            emp.Department = employee.Department;
-            emp.Salary = employee.Salary;
+            emp.Name = input.Name;
+            emp.Department = input.Department;
 
-            // Return Updated Employee
             return Ok(emp);
         }
     }
