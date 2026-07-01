@@ -82,54 +82,21 @@ EXEC sp_InsertEmployee
 	SELECT name
 FROM sys.procedures
 WHERE name IN ('sp_GetEmployeesByDepartment', 'sp_InsertEmployee');
--- Exe-2 Modify a Stored Procedure
-ALTER PROCEDURE sp_GetEmployeesByDepartment
-    @DepartmentID INT
-AS
-BEGIN
-    SELECT
-        EmployeeID,
-        FirstName,
-        LastName,
-        DepartmentID,
-        Salary,
-        JoinDate
-    FROM Emp_Master
-    WHERE DepartmentID = @DepartmentID;
-END;
-GO
 
--- Execute the Modified Procedure
-EXEC sp_GetEmployeesByDepartment @DepartmentID = 3;
-GO
--- exe3- Delete a Stored Procedure
-DROP PROCEDURE sp_GetEmployeesByDepartment;
-GO
 
-SELECT *
-FROM sys.procedures
-WHERE name = 'sp_GetEmployeesByDepartment';
 
-DROP PROCEDURE sp_GetEmployeesByDepartment;
-GO
-
-DROP PROCEDURE sp_InsertEmployee;
-GO
-SELECT name
-FROM sys.procedures;
 -- Exe-4: Execute a Stored Procedure
--- Goal: Retrieve employee details for a specific department
+
 
 EXEC sp_GetEmployeesByDepartment @DepartmentID = 2;
 GO
 
--- View result again (optional verification)
 SELECT *
 FROM Emp_Master
 WHERE DepartmentID = 2;
 GO
 -- Exe-5: Return Data from a Stored Procedure
--- Goal: Get total number of employees in a department
+
 
 CREATE PROCEDURE sp_GetEmployeeCountByDepartment
     @DepartmentID INT
@@ -141,113 +108,14 @@ BEGIN
 END;
 GO
 
--- Execute the stored procedure
+
 EXEC sp_GetEmployeeCountByDepartment @DepartmentID = 3;
 GO
 
--- Exe-6: Use Output Parameter in Stored Procedure
--- Goal: Get total salary of employees in a department using OUTPUT parameter
 
-CREATE PROCEDURE sp_GetTotalSalaryByDepartment
-    @DepartmentID INT,
-    @TotalSalary DECIMAL(10,2) OUTPUT
-AS
-BEGIN
-    SELECT @TotalSalary = SUM(Salary)
-    FROM Emp_Master
-    WHERE DepartmentID = @DepartmentID;
-END;
-GO
-
-DECLARE @SalarySum DECIMAL(10,2);
-EXEC sp_GetTotalSalaryByDepartment
-    @DepartmentID = 3,
-    @TotalSalary = @SalarySum OUTPUT;
-
-
-SELECT @SalarySum AS TotalSalary;
-GO
--- Exe-7: Stored Procedure with Multiple Parameters
--- Goal: Update employee salary
-
-CREATE PROCEDURE sp_UpdateEmployeeSalary
-    @EmployeeID INT,
-    @NewSalary DECIMAL(10,2)
-AS
-BEGIN
-    UPDATE Emp_Master
-    SET Salary = @NewSalary
-    WHERE EmployeeID = @EmployeeID;
-END;
-GO
-
-EXEC sp_UpdateEmployeeSalary 1, 5500.00;
-GO
-
-SELECT *
-FROM Emp_Master
-WHERE EmployeeID = 1;
-GO
--- Exe-8: Stored Procedure with Conditional Logic
--- Goal: Give bonus to employees based on Department
-
-CREATE PROCEDURE sp_GiveBonus
-    @DepartmentID INT,
-    @BonusAmount DECIMAL(10,2)
-AS
-BEGIN
-    UPDATE Emp_Master
-    SET Salary = Salary + @BonusAmount
-    WHERE DepartmentID = @DepartmentID;
-END;
-GO
-
-EXEC sp_GiveBonus 1, 500.00;
-GO
-
-SELECT *
-FROM Emp_Master
-WHERE DepartmentID = 1;
-GO
-
--- Exe-9: Stored Procedure with Transactions
--- Goal: Update employee salary with transaction safety
-
-CREATE PROCEDURE sp_UpdateSalaryWithTransaction
-    @EmployeeID INT,
-    @NewSalary DECIMAL(10,2)
-AS
-BEGIN
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        
-        UPDATE Emp_Master
-        SET Salary = @NewSalary
-        WHERE EmployeeID = @EmployeeID;
-
-        COMMIT TRANSACTION;
-    END TRY
-
-    BEGIN CATCH
-       
-        ROLLBACK TRANSACTION;
-
-        PRINT 'Error occurred. Transaction rolled back.';
-    END CATCH
-END;
-GO
-
-EXEC sp_UpdateSalaryWithTransaction 2, 6500.00;
-GO
-
-SELECT *
-FROM Emp_Master
-WHERE EmployeeID = 2;
-GO
 
 -- Exe-10: Stored Procedure using Dynamic SQL
--- Goal: Retrieve employee details using flexible filters
+
 
 CREATE PROCEDURE sp_GetEmployeesDynamic
     @FilterColumn NVARCHAR(50),
